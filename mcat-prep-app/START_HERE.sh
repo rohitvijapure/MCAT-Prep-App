@@ -33,7 +33,9 @@ echo ""
 # Step 2: Build and start containers
 echo "🐳 Step 2: Building and starting Docker containers..."
 echo "This may take 5-10 minutes on first run..."
-docker-compose up -d --build
+echo "Building without cache to ensure latest changes..."
+docker-compose build --no-cache
+docker-compose up -d
 
 # Wait for services to be healthy
 echo ""
