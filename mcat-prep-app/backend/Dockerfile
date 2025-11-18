@@ -20,7 +20,9 @@ RUN pip install --no-cache-dir poetry==1.7.1
 COPY pyproject.toml poetry.lock* ./
 
 # Configure poetry and install dependencies
+# Generate lock file if it doesn't exist or is invalid
 RUN poetry config virtualenvs.create false && \
+    (poetry check --lock 2>/dev/null || poetry lock --no-update) && \
     poetry install --no-interaction --no-ansi
 
 # Copy application code
@@ -41,7 +43,9 @@ RUN pip install --no-cache-dir poetry==1.7.1
 COPY pyproject.toml poetry.lock* ./
 
 # Install production dependencies only
+# Generate lock file if it doesn't exist or is invalid
 RUN poetry config virtualenvs.create false && \
+    (poetry check --lock 2>/dev/null || poetry lock --no-update) && \
     poetry install --no-interaction --no-ansi --no-dev
 
 # Copy application code
