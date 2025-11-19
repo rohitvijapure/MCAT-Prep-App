@@ -16,11 +16,12 @@ FROM base as development
 # Install poetry
 RUN pip install --no-cache-dir poetry==1.7.1
 
-# Copy dependency files
-COPY pyproject.toml poetry.lock* ./
+# Copy only pyproject.toml (we'll generate lock file fresh)
+COPY pyproject.toml ./
 
-# Configure poetry and install dependencies
+# Configure poetry and generate lock file, then install dependencies
 RUN poetry config virtualenvs.create false && \
+    poetry lock --no-update && \
     poetry install --no-interaction --no-ansi
 
 # Copy application code
@@ -37,11 +38,12 @@ FROM base as production
 # Install poetry
 RUN pip install --no-cache-dir poetry==1.7.1
 
-# Copy dependency files
-COPY pyproject.toml poetry.lock* ./
+# Copy only pyproject.toml (we'll generate lock file fresh)
+COPY pyproject.toml ./
 
-# Install production dependencies only
+# Configure poetry and generate lock file, then install production dependencies only
 RUN poetry config virtualenvs.create false && \
+    poetry lock --no-update && \
     poetry install --no-interaction --no-ansi --no-dev
 
 # Copy application code
